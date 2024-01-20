@@ -54,7 +54,19 @@ class MapPublisher : public rclcpp::Node {
     std::string color_path = this->declare_parameter("tif_color_path", ".");
     std::string frame_id = this->declare_parameter("frame_id", "map");
 
-    original_map_pub_ = this->create_publisher<grid_map_msgs::msg::GridMap>("elevation_map", 1);
+    // auto qos = rclcpp::QoS(rclcpp::QoSInitialization(RMW_QOS_POLICY_HISTORY_KEEP_LAST, 1));
+    // qos.reliable();
+    // qos.transient_local();
+
+    rmw_qos_profile_t qos_profile = rmw_qos_profile_sensor_data;
+    // auto qos = rclcpp::QoS(rclcpp::QoSInitialization(qos_profile.history, 1), qos_profile);
+    auto qos = rclcpp::QoS(rclcpp::QoSInitialization(RMW_QOS_POLICY_HISTORY_KEEP_LAST, qos_profile));
+
+    // rmw_qos_profile_t qos_profile = rmw_qos_profile_sensor_data;
+    // auto qos = rclcpp::QoS(rclcpp::QoSInitialization(qos_profile.history, 1), qos_profile);
+
+    original_map_pub_ = this->create_publisher<grid_map_msgs::msg::GridMap>("elevation_map", qos);
+    // original_map_pub_ = this->create_publisher<grid_map_msgs::msg::GridMap>("elevation_map", 1);
 
     RCLCPP_INFO_STREAM(get_logger(), "file_path " << file_path);
     RCLCPP_INFO_STREAM(get_logger(), "color_path " << color_path);
@@ -63,11 +75,11 @@ class MapPublisher : public rclcpp::Node {
     map_ = std::make_shared<GridMapGeo>(frame_id);
     map_->Load(file_path, color_path);
     auto timer_callback = [this]() -> void {
-      auto msg = grid_map::GridMapRosConverter::toMessage(map_->getGridMap());
+            auto msg = grid_map::GridMapRosConverter::toMessage(map_->getGridMap());
       if (msg) {
         msg->header.stamp = now();
         original_map_pub_->publish(std::move(msg));
-      }
+        }
     };
     timer_ = this->create_wall_timer(5s, timer_callback);
     ESPG epsg;
