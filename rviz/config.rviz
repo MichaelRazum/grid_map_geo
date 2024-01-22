@@ -67,10 +67,10 @@ Visualization Manager:
       Show Grid Lines: false
       Topic:
         Depth: 5
-        Durability Policy: Volatile
+        Durability Policy: Transient local
         Filter size: 10
         History Policy: Keep Last
-        Reliability Policy: Reliable
+        Reliability Policy: Best Effort
         Value: /grid_map_geo/elevation_map
       Use Rainbow: true
       Value: true
@@ -94,24 +94,24 @@ Visualization Manager:
       Covariance yaw: 0.06853891909122467
       Topic:
         Depth: 5
-        Durability Policy: Volatile
+        Durability Policy: Transient local
         History Policy: Keep Last
-        Reliability Policy: Reliable
+        Reliability Policy: Best Effort
         Value: /initialpose
     - Class: rviz_default_plugins/SetGoal
       Topic:
         Depth: 5
-        Durability Policy: Volatile
+        Durability Policy: Transient local
         History Policy: Keep Last
-        Reliability Policy: Reliable
+        Reliability Policy: Best Effort
         Value: /goal_pose
     - Class: rviz_default_plugins/PublishPoint
       Single click: true
       Topic:
         Depth: 5
-        Durability Policy: Volatile
+        Durability Policy: Transient local
         History Policy: Keep Last
-        Reliability Policy: Reliable
+        Reliability Policy: Best Effort
         Value: /clicked_point
   Transformation:
     Current:
